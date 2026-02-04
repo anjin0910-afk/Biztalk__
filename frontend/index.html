@@ -3,14 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BizTone Converter</title>
+    <title>BizTone Converter - 업무 말투 변환기</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
 </head>
 <body>
-    <div id="app">
-        <h1>BizTone Converter</h1>
-        <p>Phase 1 Environment Setup Complete.</p>
-    </div>
+    <header>
+        <div class="container">
+            <h1>BizTone Converter</h1>
+            <p>당신의 생각을 전문적인 비즈니스 언어로 변환하세요.</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="converter-wrapper">
+            <div class="input-section card">
+                <div class="card-header">
+                    <label for="original-text">원문 입력</label>
+                    <div class="target-selector">
+                        <label for="target-audience" class="sr-only">수신자 선택</label>
+                        <span>수신자:</span>
+                        <select id="target-audience" aria-label="수신자 선택">
+                            <option value="Upward">상사 (보고/격식)</option>
+                            <option value="Lateral">타팀 동료 (협업/예의)</option>
+                            <option value="External">고객 (공식/정중)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="textarea-wrapper">
+                    <textarea id="original-text" placeholder="변환할 내용을 입력하세요... (예: 이거 좀 늦어질 것 같아요)" maxlength="500" aria-describedby="char-count"></textarea>
+                    <button id="clear-btn" class="clear-btn hidden" aria-label="입력 내용 지우기">&times;</button>
+                </div>
+                <div class="card-footer">
+                    <span id="char-count" aria-live="polite">0 / 500</span>
+                    <button id="convert-btn" class="primary-btn" disabled>변환하기</button>
+                </div>
+            </div>
+
+            <div class="output-section card">
+                <div class="card-header">
+                    <label id="output-label">변환 결과</label>
+                </div>
+                <div id="converted-text" class="result-area" aria-labelledby="output-label" aria-live="polite">
+                    <p class="placeholder-text">변환 결과가 여기에 표시됩니다.</p>
+                </div>
+                <div class="card-footer">
+                    <div id="feedback-section" class="hidden">
+                        <span>도움이 되었나요?</span>
+                        <button class="feedback-btn" data-type="positive" aria-label="도움됨">👍</button>
+                        <button class="feedback-btn" data-type="negative" aria-label="도움 안 됨">👎</button>
+                    </div>
+                    <button id="copy-btn" class="secondary-btn" disabled aria-label="결과 복사하기">복사하기</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 BizTone Converter. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="toast" class="toast hidden">복사되었습니다!</div>
+
     <script src="js/script.js"></script>
 </body>
 </html>
