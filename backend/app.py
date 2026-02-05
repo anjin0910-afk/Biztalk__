@@ -97,6 +97,18 @@ def convert_text():
         print(f"API Error: {str(e)}")
         return jsonify({"error": f"AI 변환 중 오류가 발생했습니다: {str(e)}"}), 500
 
+@app.route('/api/feedback', methods=['POST'])
+def submit_feedback():
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "데이터가 없습니다."}), 400
+    
+    # Vercel 환경에서는 파일 저장 대신 로그로 출력하여 확인합니다.
+    # 데이터 예시: {"type": "positive", "original": "...", "converted": "...", "target": "..."}
+    print(f"--- FEEDBACK RECEIVED ---\n{data}\n-------------------------")
+    
+    return jsonify({"status": "success", "message": "피드백이 기록되었습니다."}), 200
+
 if __name__ == '__main__':
     # host='0.0.0.0'을 추가하여 네트워크 접속을 명확히 합니다.
     app.run(debug=True, host='0.0.0.0', port=5000)

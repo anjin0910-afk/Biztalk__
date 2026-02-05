@@ -127,8 +127,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 피드백 버튼 클릭 이벤트
     document.querySelectorAll('.feedback-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
             const type = btn.getAttribute('data-type');
+            const data = {
+                type: type,
+                original: originalText.value.trim(),
+                converted: convertedText.textContent,
+                target: targetAudience.value
+            };
+
+            try {
+                // 비동기로 피드백 전송 (결과를 기다리지 않고 UI 처리)
+                fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+            } catch (e) {
+                console.error('Feedback error:', e);
+            }
+
             showToast('피드백이 전달되었습니다. 감사합니다!');
             feedbackSection.classList.add('hidden');
         });
