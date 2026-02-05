@@ -1,22 +1,16 @@
 {
   "version": 2,
-  "functions": {
-    "backend/app.py": {
-      "runtime": "@vercel/python"
+  "builds": [
+    {
+      "src": "backend/app.py",
+      "use": "@vercel/python",
+      "config": { "includeFiles": "frontend/**" }
     }
-  },
-  "rewrites": [
+  ],
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/backend/app.py"
-    },
-    {
-      "source": "/",
-      "destination": "/frontend/index.html"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/$1"
+      "src": "/(.*)",
+      "dest": "backend/app.py"
     }
   ]
 }
