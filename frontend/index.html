@@ -4,68 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BizTone Converter - 업무 말투 변환기</title>
-    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply font-['Pretendard'] bg-slate-50 text-slate-900 antialiased;
+            }
+        }
+        @layer components {
+            .card {
+                @apply bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col transition-all duration-300 hover:shadow-md;
+            }
+            .btn-primary {
+                @apply bg-blue-600 text-white px-6 py-2.5 rounded-xl font-semibold transition-all duration-200 hover:bg-blue-700 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 flex items-center justify-center gap-2;
+            }
+            .btn-secondary {
+                @apply bg-white text-blue-600 border border-blue-200 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:bg-blue-50 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+            }
+        }
+    </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <h1>BizTone Converter</h1>
-            <p>당신의 생각을 전문적인 비즈니스 언어로 변환하세요.</p>
+<body class="min-h-screen flex flex-col">
+    <header class="py-12 md:py-16 text-center">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-600 tracking-tight mb-3">BizTone Converter</h1>
+            <p class="text-slate-500 text-lg">당신의 생각을 전문적인 비즈니스 언어로 변환하세요.</p>
         </div>
     </header>
 
-    <main class="container">
-        <div class="converter-wrapper">
+    <main class="container mx-auto px-4 flex-grow max-w-5xl">
+        <div class="grid md:grid-cols-2 gap-6 md:gap-8">
+            <!-- Input Section -->
             <div class="input-section card">
-                <div class="card-header">
-                    <label for="original-text">원문 입력</label>
-                    <div class="target-selector">
+                <div class="px-5 py-4 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+                    <label for="original-text" class="font-bold text-slate-700 text-sm uppercase tracking-wider">원문 입력</label>
+                    <div class="flex items-center gap-2">
                         <label for="target-audience" class="sr-only">수신자 선택</label>
-                        <span>수신자:</span>
-                        <select id="target-audience" aria-label="수신자 선택">
+                        <span class="text-xs font-medium text-slate-500">수신자:</span>
+                        <select id="target-audience" class="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all cursor-pointer" aria-label="수신자 선택">
                             <option value="Upward">상사 (보고/격식)</option>
                             <option value="Lateral">타팀 동료 (협업/예의)</option>
                             <option value="External">고객 (공식/정중)</option>
                         </select>
                     </div>
                 </div>
-                <div class="textarea-wrapper">
-                    <textarea id="original-text" placeholder="변환할 내용을 입력하세요... (예: 이거 좀 늦어질 것 같아요)" maxlength="500" aria-describedby="char-count"></textarea>
-                    <button id="clear-btn" class="clear-btn hidden" aria-label="입력 내용 지우기">&times;</button>
+                <div class="relative flex-grow">
+                    <textarea id="original-text" class="w-full h-64 md:h-80 p-5 resize-none text-slate-700 placeholder:text-slate-300 focus:outline-none text-lg leading-relaxed" placeholder="변환할 내용을 입력하세요... (예: 이거 좀 늦어질 것 같아요)" maxlength="500" aria-describedby="char-count"></textarea>
+                    <button id="clear-btn" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center hover:bg-slate-200 hover:text-slate-600 transition-colors hidden" aria-label="입력 내용 지우기">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
-                <div class="card-footer">
-                    <span id="char-count" aria-live="polite">0 / 500</span>
-                    <button id="convert-btn" class="primary-btn" disabled>변환하기</button>
+                <div class="px-5 py-4 border-t border-slate-50 flex justify-between items-center bg-slate-50/50">
+                    <span id="char-count" class="text-xs text-slate-400 font-medium" aria-live="polite">0 / 500</span>
+                    <button id="convert-btn" class="btn-primary" disabled>
+                        <span>변환하기</span>
+                    </button>
                 </div>
             </div>
 
-            <div class="output-section card">
-                <div class="card-header">
-                    <label id="output-label">변환 결과</label>
+            <!-- Output Section -->
+            <div class="output-section card group">
+                <div class="px-5 py-4 border-b border-slate-50 bg-slate-50/50">
+                    <label id="output-label" class="font-bold text-slate-700 text-sm uppercase tracking-wider">변환 결과</label>
                 </div>
-                <div id="converted-text" class="result-area" aria-labelledby="output-label" aria-live="polite">
-                    <p class="placeholder-text">변환 결과가 여기에 표시됩니다.</p>
-                </div>
-                <div class="card-footer">
-                    <div id="feedback-section" class="hidden">
-                        <span>도움이 되었나요?</span>
-                        <button class="feedback-btn" data-type="positive" aria-label="도움됨">👍</button>
-                        <button class="feedback-btn" data-type="negative" aria-label="도움 안 됨">👎</button>
+                <div id="converted-text" class="flex-grow p-5 text-slate-300 italic text-lg leading-relaxed overflow-y-auto h-64 md:h-80 whitespace-pre-wrap bg-white" aria-labelledby="output-label" aria-live="polite">변환 결과가 여기에 표시됩니다.</div>
+                <div class="px-5 py-4 border-t border-slate-50 flex justify-between items-center bg-slate-50/50">
+                    <div id="feedback-section" class="flex items-center gap-2 hidden">
+                        <span class="text-xs font-medium text-slate-500">도움이 되었나요?</span>
+                        <div class="flex gap-1">
+                            <button class="feedback-btn w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors text-lg" data-type="positive" aria-label="도움됨">👍</button>
+                            <button class="feedback-btn w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors text-lg" data-type="negative" aria-label="도움 안 됨">👎</button>
+                        </div>
                     </div>
-                    <button id="copy-btn" class="secondary-btn" disabled aria-label="결과 복사하기">복사하기</button>
+                    <button id="copy-btn" class="btn-secondary ml-auto" disabled aria-label="결과 복사하기">복사하기</button>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer>
-        <div class="container">
+    <footer class="py-12 text-center text-slate-400 text-sm">
+        <div class="container mx-auto px-4">
             <p>&copy; 2024 BizTone Converter. All rights reserved.</p>
         </div>
     </footer>
 
-    <div id="toast" class="toast hidden">복사되었습니다!</div>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-6 py-3 rounded-2xl shadow-2xl transition-all duration-300 opacity-0 translate-y-4 pointer-events-none z-50 flex items-center gap-2 hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+        <span id="toast-message">복사되었습니다!</span>
+    </div>
 
     <script src="js/script.js"></script>
 </body>
