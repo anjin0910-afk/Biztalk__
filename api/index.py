@@ -1,12 +1,15 @@
 import os
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from dotenv import load_dotenv
 from groq import Groq
 
 load_dotenv()
 
-app = Flask(__name__)
+# api 폴더의 상위 폴더(루트)를 정적 파일 폴더로 설정
+root_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
+
+app = Flask(__name__, static_folder=root_dir)
 CORS(app)
 
 api_key = os.getenv("GROQ_API_KEY")
@@ -22,6 +25,14 @@ SYSTEM_PROMPTS = {
     "Lateral": "당신은 비즈니스 커뮤니케이션 전문가입니다. 사용자의 메시지를 '타팀 동료'에게 전달하는 상황에 맞게 변환하세요.",
     "External": "당신은 비즈니스 커뮤니케이션 전문가입니다. 사용자의 메시지를 '고객'에게 안내하는 상황에 맞게 변환하세요."
 }
+
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory(app.static_folder, path)
 
 @app.route('/api/convert', methods=['GET', 'POST'])
 def convert_text():
@@ -53,3 +64,6 @@ def convert_text():
 @app.route('/api/feedback', methods=['POST'])
 def feedback():
     return jsonify({"status": "success"}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
