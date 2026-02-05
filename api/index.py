@@ -24,9 +24,10 @@ SYSTEM_PROMPTS = {
 }
 
 @app.route('/api/convert', methods=['GET', 'POST'])
+@app.route('/convert', methods=['GET', 'POST'])
 def convert_text():
     if request.method == 'GET':
-        return jsonify({"status": "ok", "message": "BizTone API is running. Use POST to convert text."}), 200
+        return jsonify({"status": "ok", "message": "BizTone API is running."}), 200
 
     data = request.get_json()
     if not data or 'text' not in data:
