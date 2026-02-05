@@ -3,14 +3,29 @@
   "builds": [
     {
       "src": "backend/app.py",
-      "use": "@vercel/python",
-      "config": { "includeFiles": "frontend/**" }
+      "use": "@vercel/python"
+    },
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/(.*)",
-      "dest": "backend/app.py"
+      "source": "/api/(.*)",
+      "destination": "backend/app.py"
+    },
+    {
+      "source": "/",
+      "destination": "frontend/index.html"
+    },
+    {
+      "source": "/(css|js)/(.*)",
+      "destination": "frontend/$1/$2"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "frontend/$1"
     }
   ]
 }
